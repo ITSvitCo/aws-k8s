@@ -1,0 +1,51 @@
+---
+- name: Create temporary directory /tmp/kube-aws
+  file:
+    name: /tmp/kube-aws
+    state: directory
+
+- name: Get the latest stable kube-aws binary for MacOS
+  get_url:
+    url: >
+      https://github.com/kubernetes-incubator/kube-aws/releases/download/{{
+      kube_aws_release_tag }}/kube-aws-darwin-amd64.tar.gz
+    dest: /tmp/kube-aws/kube-aws-darwin-amd64.tar.gz
+  when: ansible_os_family == "Darwin"
+
+- name: Unpack the latest stable kube-aws binary for MacOS
+  unarchive:
+    src: /tmp/kube-aws/kube-aws-darwin-amd64.tar.gz
+    dest: /tmp/kube-aws
+    remote_src: True
+  when: ansible_os_family == "Darwin"
+
+- name: Copy MacOS kube-aws binary to /usr/local/bin
+  copy:
+    remote_src: True
+    src: /tmp/kube-aws/darwin-amd64/kube-aws
+    dest: /usr/local/bin/kube-aws
+  become: True
+  when: ansible_os_family == "Darwin"
+
+- name: Get the latest stable kube-aws binary for Linux
+  get_url:
+    url: >
+      https://github.com/kubernetes-incubator/kube-aws/releases/download/{{
+      kube_aws_release_tag }}/kube-aws-linux-amd64.tar.gz
+    dest: /tmp/kube-aws/kube-aws-linux-amd64.tar.gz
+  when: ansible_os_family != "Darwin"
+
+- name: Unpack the latest stable kube-aws binary for Linux
+  unarchive:
+    src: /tmp/kube-aws/kube-aws-linux-amd64.tar.gz
+    dest: /tmp/kube-aws
+    remote_src: True
+  when: ansible_os_family != "Darwin"
+
+- name: Copy Linux kube-aws binary to /usr/local/bin
+  copy:
+    remote_src: True
+    src: /tmp/kube-aws/linux-amd64/kube-aws
+    dest: /usr/local/bin/kube-aws
+  become: True
+  when: ansible_os_family != "Darwin"

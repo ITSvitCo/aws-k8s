@@ -1,0 +1,16 @@
+---
+- name: Describe cloudformation stacks
+  shell: aws --region={{ aws_region }} cloudformation describe-stacks
+  register: cloudformation_stacks_list
+
+- name: Get controlplane stack
+  set_fact:
+    controlplane_stack: "{{ item }}"
+  when: kubernetes_cluster_name + "-Controlplane" in item.StackId
+  with_items: "{{ (cloudformation_stacks_list.stdout | from_json).Stacks }}"
+
+- name: Get RDS instance DNS name
+  set_fact:
+    aws_rds_dns_name: "{{ item.OutputValue }}"
+  when: item.OutputKey == 'MySQL'
+  with_items: "{{ controlplane_stack.Outputs }}"

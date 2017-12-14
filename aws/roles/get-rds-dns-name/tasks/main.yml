@@ -1,0 +1,3 @@
+---
+# tasks file for get-rds-dns-name
+- include: get-rds-dns-name.yml

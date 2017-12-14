@@ -1,0 +1,28 @@
+# AWS credentials
+aws_access_key_id: 
+aws_secret_access_key: 
+aws_region: us-east-1
+
+# kube-aws version
+# Check releases page for the lates kube-aws release
+# https://github.com/kubernetes-incubator/kube-aws/releases
+kube_aws_release_tag: v0.9.7
+
+# Kubernetes cluster
+kubernetes_cluster_name: kube1
+kubernetes_cluster_password: ""
+kubernetes_cluster_external_dns_name: kube1.example.com
+kubernetes_cluster_availability_zone1: us-east-1a
+kubernetes_cluster_cidr1: "10.0.0.0/24"
+kubernetes_cluster_availability_zone2: us-east-1b
+kubernetes_cluster_cidr2: "10.0.1.0/24"
+kubernetes_cluster_controllers_amount: 1
+kubernetes_cluster_controllers_type: t2.medium
+kubernetes_cluster_etcd_amount: 1
+kubernetes_cluster_etcd_type: t2.medium
+# nodepool1
+kubernetes_cluster_nodepool1_amount_min: 1
+kubernetes_cluster_nodepool1_amount_max: 5
+kubernetes_cluster_nodepool1_type: t2.meduim
+kubernetes_cluster_nodepool1_spot: False
+kubernetes_cluster_nodepool1_price: "0.2"

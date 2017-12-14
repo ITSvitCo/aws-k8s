@@ -1,0 +1,5 @@
+---
+- name: Set kubernetes cluster assets dir path
+  set_fact:
+    kube_cluster_assets_dir: "{{ ansible_env['PWD'] }}/../{{ kubernetes_cluster_name }}"
+  tags: set_assets_dir

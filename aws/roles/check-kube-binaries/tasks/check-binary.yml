@@ -1,0 +1,10 @@
+---
+- name: Search for {{ item }} binary
+  shell: "{{ item }}"
+  register: check_binary_presense
+  ignore_errors: true
+
+- name: Check {{ item }} presense
+  assert:
+    that: "'not found' not in check_binary_presense.stderr"
+    msg: "{{ item }} binary not found. Try running './scripts/install-kube-binaries.sh' firstly"

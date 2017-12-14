@@ -1,0 +1,3 @@
+---
+# tasks file for switch-kubectl-context
+- include: switch-kubectl-context.yml

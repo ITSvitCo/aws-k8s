@@ -1,0 +1,4 @@
+- hosts: localhost
+  roles:
+  - role: deploy-kubernetes-cluster
+  - role: describe-kubernetes-cluster

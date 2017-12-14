@@ -1,0 +1,49 @@
+---
+- name: Create kubectl config directory
+  file:
+    name: ~/.kube
+    state: directory
+
+- name: Remove kubectl config lock
+  file:
+    name: ~/.kube/config.lock
+    state: absent
+
+- name: Delete previous kubernetes cluster config
+  shell: kubectl config delete-cluster kube-aws-{{ kubernetes_cluster_name }}-cluster
+  ignore_errors: True
+
+- name: Delete previous kubernetes cluster context
+  shell: kubectl config delete-context kube-aws-{{ kubernetes_cluster_name }}-context
+  ignore_errors: True
+
+- name: Create new kubernetes cluster config
+  shell: >
+    kubectl config set-cluster
+    kube-aws-{{ kubernetes_cluster_name }}-cluster
+    --server=https://{{ kubernetes_cluster_external_dns_name }}
+
+- name: Get contents of ca.pem file
+  set_fact:
+    ca_pem: "{{ lookup('file', kube_cluster_assets_dir+'/credentials/ca.pem') }}"
+
+- name: Set new kubernetes cluster certificate-authority-data
+  shell: >
+    kubectl config set
+    clusters.kube-aws-{{ kubernetes_cluster_name }}-cluster.certificate-authority-data {{ ca_pem | string | b64encode }}
+
+- name: Create new kubernetes cluster credentials
+  shell: >
+    kubectl config set-credentials kube-aws-{{ kubernetes_cluster_name }}-admin
+    --username=admin
+    --password={{ kubernetes_cluster_password }}
+
+- name: Set new kubernetes cluster context
+  shell: >
+    kubectl config set-context kube-aws-{{ kubernetes_cluster_name }}-context
+    --user=kube-aws-{{ kubernetes_cluster_name }}-admin
+    --namespace=default
+    --cluster=kube-aws-{{ kubernetes_cluster_name }}-cluster
+
+- name: Switch current kubectl context to new kubernetes cluster
+  shell: kubectl config use-context kube-aws-{{ kubernetes_cluster_name }}-context

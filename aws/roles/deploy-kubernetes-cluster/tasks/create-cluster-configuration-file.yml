@@ -1,0 +1,6 @@
+---
+- name: Create kubernetes cluster configuration file
+  template:
+    src: templates/cluster.yaml.j2
+    dest: "{{ kube_cluster_assets_dir }}/cluster.yaml"
+    mode: 0644

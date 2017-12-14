@@ -1,0 +1,29 @@
+---
+- name: Create directory userdata
+  file:
+    name: "{{ kube_cluster_assets_dir }}/userdata"
+    state: directory
+
+- name: Create userdata/cloud-config-controller
+  copy:
+    src: files/userdata/cloud-config-controller
+    dest: "{{ kube_cluster_assets_dir }}/userdata/cloud-config-controller"
+    mode: 0644
+
+- name: Create userdata/cloud-config-etcd
+  copy:
+    src: files/userdata/cloud-config-etcd
+    dest: "{{ kube_cluster_assets_dir }}/userdata/cloud-config-etcd"
+    mode: 0644
+
+- name: Create userdata/cloud-config-worker
+  copy:
+    src: files/userdata/cloud-config-worker
+    dest: "{{ kube_cluster_assets_dir }}/userdata/cloud-config-worker"
+    mode: 0644
+
+- name: Render apiserver basic auth credentials
+  lineinfile:
+    name: "{{ kube_cluster_assets_dir }}/userdata/cloud-config-controller"
+    regexp: '^(\s+)APISERVER_BASIC_AUTH_PASSWORD(.*)?$'
+    line: '      {{ kubernetes_cluster_password }},admin,admin'

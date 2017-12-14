@@ -1,0 +1,26 @@
+---
+# tasks file for describe-kubernetes-cluster
+- name: Get information about current CloudFormation stacks
+  shell: aws --region={{ aws_region }} cloudformation describe-stacks
+  register: cloudformation_stacks_list
+
+- name: Get information about Controlplane CloudFormation stack
+  set_fact:
+    controlplane_stack: "{{ item }}"
+  when: kubernetes_cluster_name + "-Controlplane" in item.StackId
+  with_items: "{{ (cloudformation_stacks_list.stdout | from_json).Stacks }}"
+
+#  - debug:
+#      msg: |
+#        "Description: {{ item.Description }}"
+#        "Value: {{ item.OutputValue }}
+#    when: item.OutputKey == 'MySQL' or item.OutputKey == 'ElbAPIServer'
+#    with_items: "{{ controlplane_stack.Outputs }}"
+
+- name: Get ElbAPIServer URL
+  debug:
+    msg: |
+      "Description: {{ item.Description }}"
+      "Value: {{ item.OutputValue }}
+  when: item.OutputKey == 'ElbAPIServer'
+  with_items: "{{ controlplane_stack.Outputs }}"

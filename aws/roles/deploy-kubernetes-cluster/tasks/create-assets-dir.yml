@@ -1,0 +1,5 @@
+---
+- name: Create kubernetes cluster assets dir
+  file:
+    name: "{{ kube_cluster_assets_dir }}"
+    state: directory

@@ -1,0 +1,3 @@
+dependencies:
+- role: set-kubernetes-assets-directory
+- role: switch-aws-cli-credetials

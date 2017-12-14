@@ -1,0 +1,5 @@
+---
+# tasks file for install-kube-binaries
+- include: install-kubectl.yml
+
+- include: install-kube-aws.yml

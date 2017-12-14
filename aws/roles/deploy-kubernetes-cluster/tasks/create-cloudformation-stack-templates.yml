@@ -1,0 +1,24 @@
+---
+- name: Create directory stack-templates
+  file:
+    name: "{{ kube_cluster_assets_dir }}/stack-templates"
+    state: directory
+
+- name: Create stack-templates/control-plane.json.tmpl
+  copy:
+    src: files/stack-templates/control-plane.json.tmpl
+    dest: "{{ kube_cluster_assets_dir }}/stack-templates/control-plane.json.tmpl"
+    mode: 0644
+
+- name: Create stack-templates/node-pool.json.tmpl
+  copy:
+    src: files/stack-templates/node-pool.json.tmpl
+    dest: "{{ kube_cluster_assets_dir }}/stack-templates/node-pool.json.tmpl"
+    mode: 0644
+
+- name: Create stack-templates/root.json.tmpl
+  copy:
+    src: files/stack-templates/root.json.tmpl
+    dest: "{{ kube_cluster_assets_dir }}/stack-templates/root.json.tmpl"
+    mode: 0644
+

@@ -1,0 +1,11 @@
+---
+# tasks file for check-kube-binaries
+- name: Set list of binaries
+  set_fact:
+    kube_binaries:
+    - aws
+    - kubectl
+    - kube-aws
+
+- include: check-binary.yml
+  with_items: "{{ kube_binaries }}"

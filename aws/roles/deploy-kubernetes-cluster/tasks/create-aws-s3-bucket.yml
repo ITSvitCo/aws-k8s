@@ -1,0 +1,14 @@
+---
+- name: Get list of existing S3 buckets
+  shell: aws s3api --region={{ aws_region }} list-buckets
+  register: aws_s3_buckets_list
+
+- name: Create S3 bucket for Cloudformation templates
+  shell: >
+    aws s3api
+    --region={{ aws_region }}
+    create-bucket
+    --bucket {{ kubernetes_cluster_name }}
+    --create-bucket-configuration
+    LocationConstraint={{ aws_region }}
+  when: kubernetes_cluster_name not in (aws_s3_buckets_list.stdout | from_json)['Buckets'] | map(attribute='Name') | list

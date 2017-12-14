@@ -1,0 +1,10 @@
+---
+# tasks file for uninstall-cluster
+- name: Delete cluster confirmation
+  pause: prompt='Please confirm you want to delete {{ kube_cluster_assets_dir }} cluster!\nPress Enter to continue. Press Ctrl+c and then "a" to abort'
+
+- name: Delete cloudformation stack
+  shell: >
+    cd {{ kube_cluster_assets_dir }};
+    kube-aws destroy
+  when: delete_cluster == 'yes'

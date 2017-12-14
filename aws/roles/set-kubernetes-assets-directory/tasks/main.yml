@@ -1,0 +1,3 @@
+---
+# tasks file for set-kubernetes-assets-directory
+- include: set-kubernetes-assets-directory.yml

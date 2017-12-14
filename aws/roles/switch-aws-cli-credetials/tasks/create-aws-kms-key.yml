@@ -1,0 +1,32 @@
+---
+- name: Get list of kms keys
+  shell: aws kms --region={{ aws_region }} list-keys
+  register: aws_region_list
+
+- name: Get list of AWS KMS keys
+  shell: aws kms --region={{ aws_region }} describe-key --key-id {{ item['KeyId'] }}
+  with_items: "{{ (aws_region_list.stdout | from_json)['Keys'] }}"
+  register: aws_keys
+
+
+- name: Get list of KMS keys with their ARN and Description
+  set_fact:
+    aws_kms_arn_list: "{{ aws_keys['results'] | map(attribute='stdout') | map('from_json') | list }}"
+
+- name: Get KMS key ARN with 'kube-aws assets' Description
+  set_fact:
+    aws_arn: "{{ item['KeyMetadata']['Arn'] }}"
+  when: >
+    item['KeyMetadata']['Description'].strip() == 'kube-aws assets' and
+    item['KeyMetadata']['KeyState'].strip() == 'Enabled'
+  with_items: "{{ aws_kms_arn_list }}"
+
+- name: Create new KMS key
+  shell: aws kms --region={{ aws_region }} create-key --description="kube-aws assets"
+  when: aws_arn is not defined
+  register: aws_arn_output
+
+- name: Get new KMS key ARN
+  set_fact:
+    aws_arn: "{{ ( aws_arn_output.stdout | from_json )['KeyMetadata']['Arn'] }}"
+  when: aws_arn is not defined

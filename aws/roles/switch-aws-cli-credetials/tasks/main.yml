@@ -1,0 +1,7 @@
+---
+# tasks file for switch-aws-cli-credetials
+- name: Create AWS CLI credential file
+  include: create-aws-cli-credentials-file.yml
+
+- name: Create AWS KMS encryption key
+  include: create-aws-kms-key.yml

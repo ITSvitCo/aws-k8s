@@ -1,0 +1,22 @@
+---
+# tasks file for deploy-kubernetes-cluster
+- include: create-assets-dir.yml
+
+- include: create-aws-ssh-key.yml
+
+- include: create-aws-s3-bucket.yml
+
+- include: create-cluster-configuration-file.yml
+
+- include: create-cloudformation-stack-templates.yml
+
+- include: create-cloudformation-userdata.yml
+
+- include: create-kubernetes-cluster-credentials.yml
+
+- include_role:
+    name: switch-kubectl-context
+
+- include: deploy-kubernetes-cluster.yml
+  tags: deploy-cluster
+

@@ -1,0 +1,3 @@
+dependencies:
+- role: check-kube-binaries
+- role: set-kubernetes-assets-directory

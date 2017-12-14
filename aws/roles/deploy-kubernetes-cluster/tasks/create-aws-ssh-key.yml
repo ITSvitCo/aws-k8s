@@ -1,0 +1,27 @@
+---
+- name: Create kubernetes cluster ssh key
+  shell: cd {{ kube_cluster_assets_dir }}; ssh-keygen -N '' -f {{ kubernetes_cluster_name }}
+  args:
+    creates: "{{ kube_cluster_assets_dir }}/{{ kubernetes_cluster_name }}"
+
+- name: Create kubernetes cluster ssh pub key in pem format
+  shell: >
+    cd {{ kube_cluster_assets_dir }};
+    openssl rsa -in {{ kubernetes_cluster_name }} -pubout |
+    sed "/^-----.*/d" |
+    tr -d '\n' > {{ kubernetes_cluster_name }}.pub.pem
+  args:
+    creates: "{{ kube_cluster_assets_dir }}/{{ kubernetes_cluster_name }}.pub.pem"
+
+- name: Get list of existing ssh keys in AWS
+  shell: aws ec2 describe-key-pairs --region={{ aws_region }}
+  register: aws_key_pair_list
+
+- name: Create ssh key in AWS
+  shell: >
+    cd {{ kube_cluster_assets_dir }};
+    aws ec2 import-key-pair
+    --region={{ aws_region }}
+    --key-name {{ kubernetes_cluster_name }}
+    --public-key-material $( cat {{ kubernetes_cluster_name }}.pub.pem )
+  when: kubernetes_cluster_name not in (aws_key_pair_list.stdout | from_json)['KeyPairs'] | map(attribute='KeyName') | list

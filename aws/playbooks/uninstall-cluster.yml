@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars_prompt:
+  - name: "delete_cluster"
+    prompt: "Delete the kubernetes cluster? (yes/no)"
+    default: "no"
+    private: no
+
+  roles:
+  - role: uninstall-cluster
