@@ -35,8 +35,6 @@ spec:
           requests:
             cpu: 10m
             memory: 20Mi
-      nodeSelector:
-        kube-aws.coreos.com/role: worker
 
 ---
 apiVersion: v1
@@ -52,4 +50,3 @@ spec:
     targetPort: 8080
   selector:
     k8s-app: default-http-backend
-
