@@ -9,11 +9,11 @@
 - name: Deploy kubernetes cluster | 15-20 min approx
   shell: >
     cd {{ kube_cluster_assets_dir }};
-    kube-aws up --s3-uri s3://{{ kubernetes_cluster_name }}/{{ kubernetes_cluster_name }}
+    kube-aws up
   when: '"does not exist" in kubernetes_cluster_status.stderr'
 
 - name: Update kubernetes cluster | 15-20 min approx
   shell: >
     cd {{ kube_cluster_assets_dir }};
-    kube-aws update --s3-uri s3://{{ kubernetes_cluster_name }}/{{ kubernetes_cluster_name }}
+    kube-aws update 
   when: '"does not exist" not in kubernetes_cluster_status.stderr'
