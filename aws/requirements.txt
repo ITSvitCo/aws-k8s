@@ -1,4 +1,4 @@
 netaddr
 awscli
 ansible==2.2.2
-Jinja2==2.8.1
+Jinja2==2.11.3
